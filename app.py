@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import matplotlib.pyplot as plt
 import implementation
 
-app = Flask("Flask-Heart-Rate-Counter")
+app = Flask(__name__)
 app.secret_key = 'BAD_SECRET_KEY'
 
 
