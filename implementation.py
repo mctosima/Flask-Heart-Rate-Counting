@@ -4,7 +4,7 @@ import skin_detector
 import dlib
 from scipy.signal import find_peaks
 import scipy.signal as signal
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
 def find_rPPG(video_path):

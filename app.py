@@ -1,16 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import os
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-from scipy.signal import find_peaks
-import heartpy as hp
-import cv2
-import subprocess
 import implementation
 
-app = Flask(__name__)
+app = Flask("Flask-Heart-Rate-Counter")
 app.secret_key = 'BAD_SECRET_KEY'
+
 
 
 @app.route('/')
