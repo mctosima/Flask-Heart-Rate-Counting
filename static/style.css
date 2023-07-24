@@ -1,0 +1,93 @@
+body {
+	display: block;
+	margin: 0;
+}
+
+header {
+	background-color:#5983ad;
+	box-shadow:0 1px 1px #ccc;
+	height: 80px;
+	color: #ffffff;
+	box-sizing: border-box;
+	top:-100px;
+}
+
+.logo {
+	float: left;
+	margin-right: 10px;
+	margin-left: 20px;
+	margin-top: 5px;
+	margin-bottom: 25px;
+}
+
+.logo img {
+	height: 70px; 
+}
+
+.logo-text {
+	font-size: 35px;
+	font-weight: bold;
+	padding: 20px 40px;
+}
+
+h1 {
+	font-size: 25px;
+	text-align: center;
+}
+
+h2 {
+	font-size: 20px;
+	text-align: center;
+	font-family: arial;
+}
+
+h3 {
+	font-size: 20spx;
+	text-align: center;
+	font-family: monospace;
+	color: crimson;
+}
+
+p {
+	font-size: 20px;
+	text-align: center;
+	font-family: geneva;
+}
+
+.button {
+	display: flex;
+	justify-content: center;
+	justify-content: center;
+	align-items: center;
+}
+
+button {
+	font-size: 15px;
+	background: #416080;
+	color: white;
+	border: none;
+	border-radius: 30px;
+	padding: 12px 20px;
+	margin-bottom: 20px;
+}
+
+.video {
+	display: flex;
+	justify-content: center;
+	justify-content: center;
+	align-items: center;
+}
+
+.video:before {
+    content: " ";
+    position: absolute;
+    top: 350px;
+    left: 670px;
+    right: 670px;
+    bottom: 170px;
+    border: 3px solid red;
+}
+
+.hasil {
+	padding-top: 50px;
+}

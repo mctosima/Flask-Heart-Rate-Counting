@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Processing</title>
+    <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
+    <link rel="stylesheet" href='/static/style.css' />
+</head>
+<body>
+    <header>
+        <div class="logo">
+          <img src="{{ url_for('static', filename='Logo_ITERA.png') }}" alt="Logo">
+        </div>
+        <div class="logo-text">
+          Institut Teknologi Sumatera
+        </div>
+    </header><br>
+
+    <h1>Demo rPPG dengan Metode POS</h1>
+    <p id="countdown">10</h3>
+    <h3 id="status">Pastikan wajah anda berada di dalam kotak merah</h2>
+    <div class="button">
+        <button id="startBtn">Start Recording</button>
+    </div>
+
+    <div class="video">
+        <video width="640" height="360" id="videoElement" autoplay></video>
+    </div><br>
+
+    <div class="hasil">
+        <h1>Heart Rate Calculation Result</h1>
+    </div>
+    
+    <p id="hr">Heart Rate: menunggu..</p>
+    <center><img width="1333" height="333" id="showImage" style="border:none;" ></center>
+
+    <script>
+        let videoStream;
+        let mediaRecorder;
+        let chunks = [];
+        let videoElement = document.getElementById('videoElement');
+        let status = document.getElementById('status');
+        const countdown = 10; // Durasi perekaman dalam detik
+        let imageDisplay = document.getElementById('showImage');
+        let countdowndisplay = document.getElementById('countdown');
+        let heartRate = document.getElementById('hr');
+        countdowndisplay.innerHTML = countdown;
+        navigator.mediaDevices.getUserMedia({
+             video: true}).then(function(stream) {
+             videoElement.srcObject = stream;
+             });
+
+        const startCountDown = async (func, countdown) => {
+            let remainingSeconds = countdown;
+            const countdownInterval = setInterval(() => {
+                remainingSeconds--;
+                countdowndisplay.innerHTML = remainingSeconds;
+                if (remainingSeconds === 0) {
+                    clearInterval(countdownInterval);
+                    func()
+                }
+            }, 1000);
+        };
+        const processVideo = (blob) => {
+            console.log(blob)
+            const videoFile = new File([blob], 'recorded_video.webm', { type: 'video/webm' });
+
+            const formData = new FormData();
+            formData.append('video', videoFile);
+
+            fetch('/process_video', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // parsedData = JSON.parse(data);
+                if (data.code === 200) {
+
+                    // window.location.href = '/result';
+                    imageDisplay.src = data.image;
+                    heartRate.innerHTML = "Heart Rate: " + data.jumlah_peaks;
+
+                } else {
+                    console.log("Anda tidak punya muka");
+                    alert('Anda tidak punya muka');
+                }
+            })
+            .catch(error => {
+                console.error('Error processing video:', error);
+            });
+        };
+
+        const startRecording = () => {
+           navigator.mediaDevices.getUserMedia({
+                video: true
+            }).then(async function(stream) {
+                let recorder = RecordRTC(stream, {
+                    type: 'video',
+                    mimeType: 'video/webm',
+                });
+                recorder.startRecording();
+                status.innerHTML = "Recording..";
+            
+                const sleep = m => new Promise(r => setTimeout(r, m));
+                await startCountDown(() => {
+                    recorder.stopRecording(function() {
+                        let blob = recorder.getBlob();
+                        stream.getVideoTracks()[0].stop();
+                        status.innerHTML = "Stop recording";
+                        processVideo(blob);
+                    }); 
+                }, countdown);
+            });
+ 
+        };
+
+        document.getElementById('startBtn').addEventListener('click', startRecording);
+    </script>
+</body>
+</html>
