@@ -68,6 +68,7 @@
 
             const formData = new FormData();
             formData.append('video', videoFile);
+            formData.append('id', uuid);
 
             fetch('/process_video', {
                 method: 'POST',
