@@ -20,6 +20,7 @@ def process_video():
     # Save video file to a temporary location
     video_path = 'static/' + id + '.webm'
     video.save(video_path)
+    print("saved video to:", video_path)
 
 
     rPPG_filtered, rPPG_peaks = implementation.find_rPPG(video_path) 
@@ -29,7 +30,8 @@ def process_video():
             'status': 'Tak De Mukee',
             'code': 404,    
             }
-
+    
+    print("rPPG_filtered:", rPPG_filtered)
     # Plot the rPPG signal and peaks within the app context
     with app.app_context():
         plt.switch_backend('Agg')  # Use Agg backend for saving figures
@@ -50,7 +52,7 @@ def process_video():
     # remove video file
     if os.path.exists(video_path):
         os.remove(video_path)
-
+        
     return {
             'status': 'success',
             'code': 200,
