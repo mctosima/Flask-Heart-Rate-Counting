@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 import skin_detector
-import dlib
 from scipy.signal import find_peaks
 import scipy.signal as signal
 # import matplotlib.pyplot as plt
@@ -15,9 +14,10 @@ def find_rPPG(video_path):
     print(f"Frames per second using video.get(cv2.CAP_PROP_FPS) : {fps}")
 
 
-    detector = dlib.get_frontal_face_detector()
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     left_expand_ratio = 0.25
     top_expand_ratio = 0.25
+    bottom_expand_ratio = 0.25
     # Get the total numer of frames in the video.
     frame_count = vid.get(cv2.CAP_PROP_FRAME_COUNT)
     print(f"Total number of frames using video.get(cv2.CAP_PROP_FRAME_COUNT) : {frame_count}")
@@ -33,20 +33,20 @@ def find_rPPG(video_path):
             gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             if f_cnt == 0:
-                rect = detector(gray_frame, 0)
+                rect = face_cascade.detectMultiScale(gray_frame, scaleFactor=1.1, minNeighbors=5)
                 print(rect)
                 if len(rect) == 0:
                     print("No face detected")
                     break
-                rect = rect[0]
-                left, right, top, bottom = rect.left(), rect.right(), rect.top(), rect.bottom()
+                if len(rect) > 0:
+                    (x, y, w, h) = rect[0]
 
-                width = abs(right - left)
-                height = abs(bottom - top)
-                face_left = int(left - (left_expand_ratio/2 * width))
-                face_top = int(top - (top_expand_ratio/2 * height))
-                face_right = right
-                face_bottom = bottom
+                    width = w
+                    height = h
+                    face_left = int(x - (left_expand_ratio/2 * width))
+                    face_top = int(y - (top_expand_ratio/2 * height))
+                    face_right = x + w
+                    face_bottom = int(y + h + (bottom_expand_ratio/2 * height))
 
             face = frame[face_top:face_bottom, face_left:face_right]
             mask = skin_detector.process(face)
@@ -114,7 +114,7 @@ def find_rPPG(video_path):
     # minmax normalize
     rPPG_filtered = (rPPG_filtered - np.min(rPPG_filtered)) / (np.max(rPPG_filtered) - np.min(rPPG_filtered))
 
-    rPPG_peaks, _ = find_peaks(rPPG_filtered, height=0.4, prominence=0.08)
+    rPPG_peaks, _ = find_peaks(rPPG_filtered, height=0.4, prominence=0.06)
     ## Check the result
     # plt.figure(figsize=(20,5))
     # plt.plot(rPPG_filtered)
