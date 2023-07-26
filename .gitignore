@@ -2,5 +2,5 @@ recorded_video.webm
 
 __pycache__/
 skin_detectpr/__pycache__/
-static/gambar.png
-static/recorded_video.webm
+static/*.webm
+static/*.png
