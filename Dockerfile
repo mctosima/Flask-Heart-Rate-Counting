@@ -4,7 +4,7 @@ FROM python:3.9.0
 # Install system dependencies
 RUN apt-get update && apt-get install -y ffmpeg libsm6 libgl1 libxext6
 RUN apt-get install -y libgl1-mesa-glx
-RUN apt-get install -y opencv-python
+RUN apt-get install -y libopencv-dev python3-opencv
 
 
 # Set working directory
