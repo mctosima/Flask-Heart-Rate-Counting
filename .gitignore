@@ -1,0 +1,6 @@
+recorded_video.webm
+
+__pycache__/
+skin_detectpr/__pycache__/
+static/*.webm
+static/*.png

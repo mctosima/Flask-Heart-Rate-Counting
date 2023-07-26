@@ -1,13 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import os
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-from scipy.signal import find_peaks
-import heartpy as hp
-import cv2
-import subprocess
 import implementation
+import os 
 
 app = Flask(__name__)
 app.secret_key = 'BAD_SECRET_KEY'
@@ -21,9 +15,10 @@ def home():
 def process_video():
     # Get video file from the request
     video = request.files['video']
+    id = request.form['id']
 
     # Save video file to a temporary location
-    video_path = 'recorded_video.webm'
+    video_path = 'static/' + id + '.webm'
     video.save(video_path)
 
 
@@ -42,18 +37,25 @@ def process_video():
         ax.plot(rPPG_filtered, label='rPPG Signal')
         if len(rPPG_peaks) > 0:
             ax.plot(rPPG_peaks, rPPG_filtered[rPPG_peaks], "x", label='Peaks')
-        fig.savefig('static/gambar.png')
+        
+        img_path = 'static/gambar_' + id + '.png'
+        fig.savefig(img_path)
         plt.close(fig)
 
     heart_rate = len(rPPG_peaks) * 6
 
     # Pass the results to the template
     session['jumlah_peaks'] = heart_rate
+
+    # remove video file
+    if os.path.exists(video_path):
+        os.remove(video_path)
+
     return {
             'status': 'success',
             'code': 200,
             'jumlah_peaks': heart_rate,
-            'image': url_for('static', filename='gambar.png'), 
+            'image': url_for('static', filename='gambar_' + id + '.png'), 
             }
 
 
