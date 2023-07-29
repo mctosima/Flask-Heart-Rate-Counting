@@ -82,7 +82,7 @@
                 if (data.code === 200) {
 
                     // window.location.href = '/result';
-                    imageDisplay.src = window.location.href + data.image.slice(1);
+                    imageDisplay.src = window.location.href + data.image;
                     heartRate.innerHTML = "Heart Rate: " + data.jumlah_peaks;
 
                 } else {
