@@ -69,19 +69,20 @@
             const formData = new FormData();
             formData.append('video', videoFile);
             formData.append('id', uuid);
-
+            
             fetch('/process_video', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
+                // console.log(window.location.href);
+                // console.log(data.image.slice(1));
                 // parsedData = JSON.parse(data);
                 if (data.code === 200) {
 
                     // window.location.href = '/result';
-                    imageDisplay.src = data.image;
+                    imageDisplay.src = window.location.href + data.image.slice(1);
                     heartRate.innerHTML = "Heart Rate: " + data.jumlah_peaks;
 
                 } else {
