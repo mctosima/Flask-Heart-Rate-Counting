@@ -35,6 +35,8 @@ def process_video():
         plt.switch_backend('Agg')  # Use Agg backend for saving figures
         fig, ax = plt.subplots(figsize=(20, 5))
         ax.plot(rPPG_filtered, label='rPPG Signal')
+        ax.set_xlabel('Waktu')
+        ax.set_ylabel('Amplitudo')
         if len(rPPG_peaks) > 0:
             ax.plot(rPPG_peaks, rPPG_filtered[rPPG_peaks], "x", label='Peaks')
 
